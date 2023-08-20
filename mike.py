@@ -19,7 +19,7 @@ default_config = {"volume": 100, "interval": 0.5, "keep_unmuted": True}
 
 
 # Function to stop the execution
-def stop_execution():
+def exit():
     global running
 
     running = False
@@ -77,7 +77,7 @@ def on_change_volume():
         save_config()
 
 
-def on_change_keep_unmuted(checked):
+def on_toggle_keep_unmuted(checked):
     global config
 
     config["keep_unmuted"] = checked
@@ -105,5 +105,10 @@ mike_thread = threading.Thread(target=force_microphone)
 mike_thread.start()
 
 create_tray_icon(
-    on_change_keep_unmuted, on_change_interval, on_change_volume, stop_execution
+    {
+        "on_toggle_keep_unmuted": on_toggle_keep_unmuted,
+        "on_change_interval": on_change_interval,
+        "on_change_volume": on_change_volume,
+        "exit_handler": exit,
+    }
 )
