@@ -8,7 +8,7 @@ Inspired by (and some code fragments from): https://github.com/wolfinabox/Window
 
 But I also needed the ability to keep the microphone unmuted. Something that wouldn't work well with `infi.systray` (see *Architectural decisions*). And running `nircmd` repeatedly didn't seem ideal (laptop battery usage - although the difference is admittedly probably negligible...) to me.
 
-While this tool is larger, actually running it is more efficient:
+While this tool is larger, actually running it is more efficient (these values were measured using the .exe files, at an interval of 0.1s):
 
 |     | Mike Force | Mic-Volume-Locker |
 | -------- | ------- | ------- |
