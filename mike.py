@@ -1,11 +1,10 @@
-import json
-import os
 import tkinter.simpledialog
 import threading
 import time
 from comtypes import CLSCTX_ALL, CoInitialize, CoUninitialize
 from ctypes import windll
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from config import config, save_config
 from utils import script_dir
 from tray import create_tray_icon
 
@@ -13,9 +12,6 @@ from tray import create_tray_icon
 windll.shcore.SetProcessDpiAwareness(1)
 
 running = True
-CONFIG_PATH = os.path.join(script_dir(), "config.json")
-config = {}
-default_config = {"volume": 100, "interval": 0.5, "keep_unmuted": True}
 
 
 # Function to stop the execution
@@ -82,23 +78,6 @@ def on_toggle_keep_unmuted(checked):
 
     config["keep_unmuted"] = checked
 
-
-def load_config():
-    global config
-
-    if not os.path.exists(CONFIG_PATH):
-        config = default_config.copy()
-    else:
-        with open(CONFIG_PATH, "r") as f:
-            config = json.load(f)
-
-
-def save_config():
-    with open(CONFIG_PATH, "w") as f:
-        json.dump(config, f)
-
-
-load_config()
 
 # Start the microphone control in a separate thread
 mike_thread = threading.Thread(target=force_microphone)
