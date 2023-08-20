@@ -12,19 +12,19 @@ class SystemTrayIcon(QSystemTrayIcon):
         super(SystemTrayIcon, self).__init__(icon, parent)
         menu = QMenu(parent)
 
-        checkableAction = QAction("Keep muted", parent)
+        checkableAction = QAction("Keep unmuted", parent)
         checkableAction.setCheckable(True)
         checkableAction.setChecked(config["keep_unmuted"])
         checkableAction.triggered.connect(handlers["on_toggle_keep_unmuted"])
         menu.addAction(checkableAction)
 
-        intervalAction = QAction("Change target interval", parent)
-        intervalAction.triggered.connect(handlers["on_change_interval"])
-        menu.addAction(intervalAction)
-
         volumeAction = QAction("Change target volume", parent)
         volumeAction.triggered.connect(handlers["on_change_volume"])
         menu.addAction(volumeAction)
+
+        intervalAction = QAction("Change interval between runs", parent)
+        intervalAction.triggered.connect(handlers["on_change_interval"])
+        menu.addAction(intervalAction)
 
         exitAction = QAction("Exit", parent)
         exitAction.triggered.connect(QCoreApplication.instance().quit)
