@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import QMenu, QSystemTrayIcon, QAction, QApplication, QWidg
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication
 import sys
+from config import config
+
+from utils import local_path
 
 
 class SystemTrayIcon(QSystemTrayIcon):
@@ -11,6 +14,7 @@ class SystemTrayIcon(QSystemTrayIcon):
 
         checkableAction = QAction("Keep muted", parent)
         checkableAction.setCheckable(True)
+        checkableAction.setChecked(config["keep_unmuted"])
         checkableAction.triggered.connect(handlers["on_toggle_keep_unmuted"])
         menu.addAction(checkableAction)
 
@@ -34,7 +38,7 @@ def create_tray_icon(handlers):
     app = QApplication([])
     widget = QWidget()
 
-    tray_icon = SystemTrayIcon(QIcon("icon.ico"), handlers, widget)
+    tray_icon = SystemTrayIcon(QIcon(local_path("assets/icon.ico")), handlers, widget)
     tray_icon.show()
 
     sys.exit(app.exec_())

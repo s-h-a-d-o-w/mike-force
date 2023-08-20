@@ -10,7 +10,7 @@ While this is much larger on the hard drive, running it is much more efficient: 
 | -------- | ------- | ------- |
 | Processor time  | 0-0.016%  | ~0.2%  |
 | RAM used | ~19 MB  | ~18 MB    |
-| Drive space used  | ~100 MB  | ~10 MB  |
+| Drive space used  | ~73 MB  | ~10 MB  |
 
 ## Architectural decisions
 

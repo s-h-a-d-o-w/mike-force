@@ -5,7 +5,6 @@ from comtypes import CLSCTX_ALL, CoInitialize, CoUninitialize
 from ctypes import windll
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from config import config, save_config
-from utils import script_dir
 from tray import create_tray_icon
 
 # See https://stackoverflow.com/a/43046744/5040168
@@ -77,6 +76,7 @@ def on_toggle_keep_unmuted(checked):
     global config
 
     config["keep_unmuted"] = checked
+    save_config()
 
 
 # Start the microphone control in a separate thread
