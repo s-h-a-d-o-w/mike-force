@@ -22,4 +22,4 @@ While this tool is larger, actually running it is more efficient (these values w
 
 `PyQt` is used because `infi.systray` doesn't support checked tray menu items and with `pystray`, the dialogs that can be triggered only focused correctly the first time that they opened.
 
-(As an added bonus, `PyQt` starts so much faster that a splash screen isn't needed.)
+(As an added bonus, `PyQt` does things so much faster that a splash screen isn't needed.)
