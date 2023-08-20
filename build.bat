@@ -1,2 +1,2 @@
 rmdir /s /q dist
-pyinstaller --add-data "icon.ico;." -i "icon.ico" --noupx --windowed --onedir mike.py
+pyinstaller --add-data "assets/icon.ico;." -i "assets/icon.ico" --noupx --windowed --onedir mike.py
