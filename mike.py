@@ -3,12 +3,11 @@ import os
 import tkinter.simpledialog
 import threading
 import time
-import pystray
 from comtypes import CLSCTX_ALL, CoInitialize, CoUninitialize
 from ctypes import windll
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from PIL import Image
-from utils import local_path, script_dir
+from utils import script_dir
+from tray import create_tray_icon
 
 # See https://stackoverflow.com/a/43046744/5040168
 windll.shcore.SetProcessDpiAwareness(1)
@@ -20,11 +19,11 @@ default_config = {"volume": 100, "interval": 0.5, "keep_unmuted": True}
 
 
 # Function to stop the execution
-def stop_execution(icon):
+def stop_execution():
     global running
+
     running = False
     mike_thread.join()  # Wait for the mic_thread to finish
-    icon.stop()
 
 
 # Function to control microphone volume
@@ -78,25 +77,10 @@ def on_change_volume():
         save_config()
 
 
-def on_change_keep_unmuted(_, item):
+def on_change_keep_unmuted(checked):
     global config
 
-    config["keep_unmuted"] = not item.checked
-
-
-# Create the tray icon
-def create_tray_icon():
-    menu = (
-        pystray.MenuItem(
-            "Keep Unmuted",
-            on_change_keep_unmuted,
-            checked=lambda _: config["keep_unmuted"],
-        ),
-        pystray.MenuItem("Change Target Volume", on_change_volume),
-        pystray.MenuItem("Change Interval", on_change_interval),
-        pystray.MenuItem("Exit", stop_execution),
-    )
-    return pystray.Icon("name", Image.open(local_path("icon.ico")), "Mike Force", menu)
+    config["keep_unmuted"] = checked
 
 
 def load_config():
@@ -120,14 +104,6 @@ load_config()
 mike_thread = threading.Thread(target=force_microphone)
 mike_thread.start()
 
-# See https://pyinstaller.org/en/stable/usage.html#the-pyi-splash-module
-try:
-    import pyi_splash
-
-    pyi_splash.close()
-except:
-    pass
-
-# Create and run the tray icon
-icon = create_tray_icon()
-icon.run()
+create_tray_icon(
+    on_change_keep_unmuted, on_change_interval, on_change_volume, stop_execution
+)
