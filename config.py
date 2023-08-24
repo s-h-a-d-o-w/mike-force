@@ -4,7 +4,7 @@ from utils import script_dir
 
 CONFIG_PATH = os.path.join(script_dir(), "config.json")
 config = {}
-default_config = {"volume": 100, "interval": 0.5, "keep_unmuted": True}
+default_config = {"volume": 100, "interval": 0.1, "keep_unmuted": True}
 
 
 def load_config():
