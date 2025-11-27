@@ -2,7 +2,7 @@
 
 # mike-force
 
-Mike Force lurks in a tray icon to help you ensure that the settings for your default microphone on Windows stick (also keep it unmuted if you want to). He e.g. defends the (partially) disabled against attacks by Nuance's dragon. 😉
+Mike Force lurks in a tray icon to make sure that the settings for your default microphone (or all microphones) on Windows stick. (Also keep it/them unmuted if you want to.)
 
 ## Other tools
 
