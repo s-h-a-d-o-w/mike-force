@@ -6,6 +6,8 @@ from ctypes import windll
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from config import config, save_config
 from tray import create_tray_icon
+from PyQt5.QtCore import QCoreApplication
+from pycaw.constants import EDataFlow
 
 # See https://stackoverflow.com/a/43046744/5040168
 windll.shcore.SetProcessDpiAwareness(1)
@@ -19,6 +21,9 @@ def exit():
 
     running = False
     mike_thread.join()  # Wait for the mic_thread to finish
+    app = QCoreApplication.instance()
+    if app:
+        app.quit()
 
 
 # Function to control microphone volume
@@ -26,14 +31,27 @@ def force_microphone():
     CoInitialize()
 
     while running:
-        devices = AudioUtilities.GetMicrophone()
-        interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-        volume = interface.QueryInterface(IAudioEndpointVolume)
+        if config["apply_all_mics"]:
+            all_devices = AudioUtilities.GetAllDevices(
+                data_flow=EDataFlow.eCapture.value
+            )
+            for device in all_devices:
+                try:
+                    volume = device.EndpointVolume
 
-        # print(config["keep_unmuted"])
-        if config["keep_unmuted"]:
-            volume.SetMute(0, None)
-        volume.SetMasterVolumeLevelScalar(config["volume"] * 0.01, None)
+                    if config["keep_unmuted"]:
+                        volume.SetMute(0, None)
+                    volume.SetMasterVolumeLevelScalar(config["volume"] * 0.01, None)
+                except:
+                    pass
+        else:
+            devices = AudioUtilities.GetMicrophone()
+            interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+            volume = interface.QueryInterface(IAudioEndpointVolume)
+
+            if config["keep_unmuted"]:
+                volume.SetMute(0, None)
+            volume.SetMasterVolumeLevelScalar(config["volume"] * 0.01, None)
 
         time.sleep(config["interval"])
 
@@ -79,6 +97,13 @@ def on_toggle_keep_unmuted(checked):
     save_config()
 
 
+def on_toggle_apply_all_mics(checked):
+    global config
+
+    config["apply_all_mics"] = checked
+    save_config()
+
+
 # Start the microphone control in a separate thread
 mike_thread = threading.Thread(target=force_microphone)
 mike_thread.start()
@@ -86,6 +111,7 @@ mike_thread.start()
 create_tray_icon(
     {
         "on_toggle_keep_unmuted": on_toggle_keep_unmuted,
+        "on_toggle_apply_all_mics": on_toggle_apply_all_mics,
         "on_change_interval": on_change_interval,
         "on_change_volume": on_change_volume,
         "exit_handler": exit,
